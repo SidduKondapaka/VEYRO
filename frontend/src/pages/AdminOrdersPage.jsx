@@ -119,7 +119,7 @@ export default function AdminOrdersPage() {
                   </td>
                 </tr>
               ) : (
-                orders.map((o) => (
+                (Array.isArray(orders) ? orders : []).map((o) => (
                   <tr key={o.id} style={{ borderBottom: '1px solid #f1f5f9' }}>
                     <td style={{ padding: '12px 16px', fontWeight: 600, color: '#0f172a' }}>
                       {o.orderNumber}

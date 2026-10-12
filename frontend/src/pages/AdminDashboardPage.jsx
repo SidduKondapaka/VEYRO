@@ -161,7 +161,7 @@ export default function AdminDashboardPage() {
               </tr>
             </thead>
             <tbody>
-              {stats?.recentOrders && stats.recentOrders.length > 0 ? (
+              {Array.isArray(stats?.recentOrders) && stats.recentOrders.length > 0 ? (
                 stats.recentOrders.map((order) => (
                   <tr key={order.id} style={{ borderBottom: '1px solid #f1f5f9' }}>
                     <td style={{ padding: '12px 16px', fontWeight: 600, color: '#0f172a' }}>

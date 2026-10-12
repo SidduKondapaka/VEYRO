@@ -191,7 +191,7 @@ export default function AdminProductsPage() {
               </tr>
             </thead>
             <tbody>
-              {filteredProducts.map((p) => (
+              {(Array.isArray(filteredProducts) ? filteredProducts : []).map((p) => (
                 <tr key={p.id} style={{ borderBottom: '1px solid #f1f5f9' }}>
                   <td style={{ padding: '12px 16px' }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
@@ -326,7 +326,7 @@ export default function AdminProductsPage() {
                     onChange={(e) => setFormData({ ...formData, categoryId: e.target.value })}
                     className="form-select"
                   >
-                    {categories.map((c) => (
+                    {(Array.isArray(categories) ? categories : []).map((c) => (
                       <option key={c.id} value={c.id}>{c.name}</option>
                     ))}
                   </select>

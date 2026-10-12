@@ -380,7 +380,7 @@ export default function ProductDetail() {
               <p style={{ color: '#64748b' }}>Be the first customer to write a review for this product!</p>
             ) : (
               <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-                {reviews.map((rev) => (
+                {(Array.isArray(reviews) ? reviews : []).map((rev) => (
                   <div key={rev.id} className="card" style={{ padding: '1.25rem', backgroundColor: '#ffffff' }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '8px' }}>
                       <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>

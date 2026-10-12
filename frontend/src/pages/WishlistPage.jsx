@@ -36,7 +36,7 @@ export default function WishlistPage() {
       </div>
 
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))', gap: '1.5rem' }}>
-        {wishlist.items.map((item) => {
+        {(Array.isArray(wishlist?.items) ? wishlist.items : []).map((item) => {
           const isOutOfStock = item.stockQuantity <= 0;
           const displayPrice = item.salePrice || item.price;
 

@@ -89,7 +89,7 @@ export default function OrdersPage() {
       </div>
 
       <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-        {orders.map((order) => {
+        {(Array.isArray(orders) ? orders : []).map((order) => {
           const isCancellable =
             ['PENDING', 'CONFIRMED', 'PROCESSING'].includes(order.orderStatus);
 
@@ -129,7 +129,7 @@ export default function OrdersPage() {
               {/* Card Body */}
               <div style={{ padding: '1.5rem' }}>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', marginBottom: '1.5rem' }}>
-                  {order.items.map((item) => (
+                  {(Array.isArray(order?.items) ? order.items : []).map((item) => (
                     <div key={item.id} style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
                       <div style={{ width: '64px', height: '64px', borderRadius: '8px', overflow: 'hidden', backgroundColor: '#f1f5f9', flexShrink: 0 }}>
                         <img src={item.productImage || 'https://images.unsplash.com/photo-1526170375885-4d8ecf77b99f?w=120'} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />

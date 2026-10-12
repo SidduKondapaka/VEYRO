@@ -122,7 +122,7 @@ export default function AdminCategoriesPage() {
             </tr>
           </thead>
           <tbody>
-            {categories.map((c) => (
+            {(Array.isArray(categories) ? categories : []).map((c) => (
               <tr key={c.id} style={{ borderBottom: '1px solid #f1f5f9' }}>
                 <td style={{ padding: '12px 16px' }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>

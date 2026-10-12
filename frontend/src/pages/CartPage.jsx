@@ -87,7 +87,7 @@ export default function CartPage() {
             )}
           </div>
 
-          {cart.items.map((item) => (
+          {(Array.isArray(cart?.items) ? cart.items : []).map((item) => (
             <div
               key={item.id}
               className="card"

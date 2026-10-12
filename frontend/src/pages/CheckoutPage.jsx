@@ -219,7 +219,7 @@ export default function CheckoutPage() {
               </form>
             ) : (
               <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-                {addresses.map((addr) => (
+                {(Array.isArray(addresses) ? addresses : []).map((addr) => (
                   <label
                     key={addr.id}
                     style={{
@@ -341,7 +341,7 @@ export default function CheckoutPage() {
 
           {/* Items summary */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', maxHeight: '200px', overflowY: 'auto', marginBottom: '1.25rem', paddingRight: '4px' }}>
-            {cart.items.map((item) => (
+            {(Array.isArray(cart?.items) ? cart.items : []).map((item) => (
               <div key={item.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '0.85rem' }}>
                 <span style={{ maxWidth: '200px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                   {item.quantity}x {item.productName}

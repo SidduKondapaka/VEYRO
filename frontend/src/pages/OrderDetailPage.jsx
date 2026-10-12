@@ -216,7 +216,7 @@ export default function OrderDetailPage() {
       <div className="card" style={{ padding: '1.5rem', backgroundColor: '#ffffff', marginBottom: '2rem' }}>
         <h3 style={{ fontSize: '1.1rem', marginBottom: '1.25rem', color: '#0f172a' }}>Items in this Order</h3>
         <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-          {order.items.map((item) => (
+          {(Array.isArray(order?.items) ? order.items : []).map((item) => (
             <div key={item.id} style={{ display: 'flex', alignItems: 'center', gap: '16px', paddingBottom: '1rem', borderBottom: '1px solid #f1f5f9' }}>
               <div style={{ width: '64px', height: '64px', borderRadius: '8px', overflow: 'hidden', backgroundColor: '#f8fafc', flexShrink: 0 }}>
                 <img src={item.productImage || 'https://images.unsplash.com/photo-1526170375885-4d8ecf77b99f?w=120'} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
@@ -236,7 +236,7 @@ export default function OrderDetailPage() {
       </div>
 
       {/* Status History Timeline */}
-      {order.statusHistory && order.statusHistory.length > 0 && (
+      {Array.isArray(order?.statusHistory) && order.statusHistory.length > 0 && (
         <div className="card" style={{ padding: '1.5rem', backgroundColor: '#ffffff' }}>
           <h3 style={{ fontSize: '1.1rem', marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: '8px', color: '#0f172a' }}>
             <Clock size={18} style={{ color: '#0d9488' }} /> Status History Log
