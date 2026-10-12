@@ -1,0 +1,32 @@
+# Backend
+backend/target/
+backend/.mvn/
+backend/*.iml
+backend/.idea/
+backend/.project
+backend/.classpath
+backend/.settings/
+
+# Frontend
+frontend/node_modules/
+frontend/dist/
+frontend/.env.local
+frontend/.env.development.local
+frontend/.env.test.local
+frontend/.env.production.local
+frontend/npm-debug.log*
+frontend/yarn-debug.log*
+frontend/yarn-error.log*
+
+# Environment and sensitive files
+.env
+*.env
+!.env.example
+*.log
+.DS_Store
+
+# IDE
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
