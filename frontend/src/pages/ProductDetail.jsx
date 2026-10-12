@@ -12,6 +12,7 @@ import { useWishlist } from '../context/WishlistContext';
 import { useAuth } from '../context/AuthContext';
 import { useToast } from '../context/ToastContext';
 import api from '../api/axios';
+import { FALLBACK_PRODUCTS } from '../api/fallbackData';
 
 export default function ProductDetail() {
   const { slug } = useParams();
@@ -47,7 +48,10 @@ export default function ProductDetail() {
           setReviews(revRes.data.content || []);
         }
       } catch (err) {
-        console.error('Failed to load product', err);
+        console.warn('Backend currently unreachable, searching fallback catalog:', err);
+        const fallback = FALLBACK_PRODUCTS.find((p) => p.slug === slug) || FALLBACK_PRODUCTS[0];
+        setProduct(fallback);
+        setSelectedImage(fallback?.primaryImageUrl || '');
       } finally {
         setLoading(false);
       }

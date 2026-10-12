@@ -23,9 +23,15 @@ api.interceptors.request.use(
   (error) => Promise.reject(error)
 );
 
-// Response interceptor for token expiry handling
+// Response interceptor for token expiry handling & HTML response prevention
 api.interceptors.response.use(
-  (response) => response,
+  (response) => {
+    // If backend is remote/offline and Vercel returns index.html for /api requests, reject so caller catches it
+    if (typeof response.data === 'string' && response.data.trim().startsWith('<')) {
+      return Promise.reject(new Error('API returned HTML instead of JSON. Backend may not be configured.'));
+    }
+    return response;
+  },
   (error) => {
     if (error.response && error.response.status === 401) {
       // If unauthorized and not already on login/auth routes, clear storage

@@ -8,11 +8,11 @@ import api from '../api/axios';
 import { FALLBACK_CATEGORIES, FALLBACK_PRODUCTS } from '../api/fallbackData';
 
 export default function Home() {
-  const [categories, setCategories] = useState([]);
-  const [featuredProducts, setFeaturedProducts] = useState([]);
-  const [bestSellers, setBestSellers] = useState([]);
-  const [newArrivals, setNewArrivals] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [categories, setCategories] = useState(FALLBACK_CATEGORIES);
+  const [featuredProducts, setFeaturedProducts] = useState(FALLBACK_PRODUCTS);
+  const [bestSellers, setBestSellers] = useState(FALLBACK_PRODUCTS.slice(0, 4));
+  const [newArrivals, setNewArrivals] = useState(FALLBACK_PRODUCTS.slice(2, 6));
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const loadHomeData = async () => {
@@ -24,16 +24,21 @@ export default function Home() {
           api.get('/products/new-arrivals'),
         ]);
 
-        setCategories(catRes.data?.length ? catRes.data : FALLBACK_CATEGORIES);
-        setFeaturedProducts(featRes.data?.length ? featRes.data : FALLBACK_PRODUCTS);
-        setBestSellers(bestRes.data?.length ? bestRes.data : FALLBACK_PRODUCTS.slice(0, 4));
-        setNewArrivals(newRes.data?.length ? newRes.data : FALLBACK_PRODUCTS.slice(2, 6));
+        if (Array.isArray(catRes.data) && catRes.data.length > 0) {
+          setCategories(catRes.data);
+        }
+        if (Array.isArray(featRes.data) && featRes.data.length > 0) {
+          setFeaturedProducts(featRes.data);
+        }
+        if (Array.isArray(bestRes.data) && bestRes.data.length > 0) {
+          setBestSellers(bestRes.data);
+        }
+        if (Array.isArray(newRes.data) && newRes.data.length > 0) {
+          setNewArrivals(newRes.data);
+        }
       } catch (err) {
         console.warn('Backend API currently unreachable, using catalog preview:', err);
-        setCategories(FALLBACK_CATEGORIES);
-        setFeaturedProducts(FALLBACK_PRODUCTS);
-        setBestSellers(FALLBACK_PRODUCTS.slice(0, 4));
-        setNewArrivals(FALLBACK_PRODUCTS.slice(2, 6));
+        // Leave pre-initialized fallback data intact
       } finally {
         setLoading(false);
       }
@@ -141,7 +146,7 @@ export default function Home() {
         </div>
 
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))', gap: '1rem' }}>
-          {categories.map((cat) => (
+          {(Array.isArray(categories) ? categories : FALLBACK_CATEGORIES).map((cat) => (
             <Link
               key={cat.id}
               to={`/products?category=${cat.slug}`}
@@ -192,7 +197,7 @@ export default function Home() {
         </div>
 
         <div className="grid-products">
-          {featuredProducts.slice(0, 8).map((product) => (
+          {(Array.isArray(featuredProducts) ? featuredProducts : FALLBACK_PRODUCTS).slice(0, 8).map((product) => (
             <ProductCard key={product.id} product={product} />
           ))}
         </div>
@@ -259,7 +264,7 @@ export default function Home() {
         </div>
 
         <div className="grid-products">
-          {bestSellers.slice(0, 4).map((product) => (
+          {(Array.isArray(bestSellers) ? bestSellers : FALLBACK_PRODUCTS).slice(0, 4).map((product) => (
             <ProductCard key={product.id} product={product} />
           ))}
         </div>
@@ -280,7 +285,7 @@ export default function Home() {
         </div>
 
         <div className="grid-products">
-          {newArrivals.slice(0, 4).map((product) => (
+          {(Array.isArray(newArrivals) ? newArrivals : FALLBACK_PRODUCTS).slice(0, 4).map((product) => (
             <ProductCard key={product.id} product={product} />
           ))}
         </div>

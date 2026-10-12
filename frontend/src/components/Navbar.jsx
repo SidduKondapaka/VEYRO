@@ -18,7 +18,7 @@ export default function Navbar() {
   const location = useLocation();
 
   const [keyword, setKeyword] = useState('');
-  const [categories, setCategories] = useState([]);
+  const [categories, setCategories] = useState(FALLBACK_CATEGORIES);
   const [selectedCategory, setSelectedCategory] = useState('');
   const [showUserMenu, setShowUserMenu] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -27,9 +27,11 @@ export default function Navbar() {
     const fetchCategories = async () => {
       try {
         const res = await api.get('/categories');
-        setCategories(res.data?.length ? res.data : FALLBACK_CATEGORIES);
+        if (Array.isArray(res.data) && res.data.length > 0) {
+          setCategories(res.data);
+        }
       } catch (err) {
-        setCategories(FALLBACK_CATEGORIES);
+        // Keep fallback categories intact
       }
     };
     fetchCategories();
@@ -123,7 +125,7 @@ export default function Navbar() {
               }}
             >
               <option value="">All Categories</option>
-              {categories.map((c) => (
+              {(Array.isArray(categories) ? categories : FALLBACK_CATEGORIES).map((c) => (
                 <option key={c.id} value={c.slug}>{c.name}</option>
               ))}
             </select>
@@ -379,7 +381,7 @@ export default function Navbar() {
           >
             All Products
           </Link>
-          {categories.map((c) => (
+          {(Array.isArray(categories) ? categories : FALLBACK_CATEGORIES).map((c) => (
             <Link
               key={c.id}
               to={`/products?category=${c.slug}`}

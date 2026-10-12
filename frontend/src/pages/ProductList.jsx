@@ -10,10 +10,10 @@ import { FALLBACK_CATEGORIES, FALLBACK_PRODUCTS } from '../api/fallbackData';
 export default function ProductList() {
   const [searchParams, setSearchParams] = useSearchParams();
 
-  const [products, setProducts] = useState([]);
-  const [categories, setCategories] = useState([]);
-  const [pageData, setPageData] = useState({ page: 0, totalPages: 1, totalElements: 0 });
-  const [loading, setLoading] = useState(true);
+  const [products, setProducts] = useState(FALLBACK_PRODUCTS);
+  const [categories, setCategories] = useState(FALLBACK_CATEGORIES);
+  const [pageData, setPageData] = useState({ page: 0, totalPages: 1, totalElements: FALLBACK_PRODUCTS.length });
+  const [loading, setLoading] = useState(false);
 
   // Filters from URL
   const keyword = searchParams.get('keyword') || '';
@@ -33,9 +33,11 @@ export default function ProductList() {
     const fetchCategories = async () => {
       try {
         const res = await api.get('/categories');
-        setCategories(res.data?.length ? res.data : FALLBACK_CATEGORIES);
+        if (Array.isArray(res.data) && res.data.length > 0) {
+          setCategories(res.data);
+        }
       } catch (err) {
-        setCategories(FALLBACK_CATEGORIES);
+        // Keep fallback categories intact
       }
     };
     fetchCategories();
@@ -58,12 +60,14 @@ export default function ProductList() {
         if (minRating) params.minRating = minRating;
 
         const res = await api.get('/products', { params });
-        setProducts(res.data.content || []);
-        setPageData({
-          page: res.data.page,
-          totalPages: res.data.totalPages,
-          totalElements: res.data.totalElements,
-        });
+        if (Array.isArray(res.data?.content)) {
+          setProducts(res.data.content);
+          setPageData({
+            page: res.data.page ?? 0,
+            totalPages: res.data.totalPages ?? 1,
+            totalElements: res.data.totalElements ?? res.data.content.length,
+          });
+        }
       } catch (err) {
         console.warn('Backend API currently unreachable, using catalog preview:', err);
         setProducts(FALLBACK_PRODUCTS);
@@ -173,7 +177,7 @@ export default function ProductList() {
               >
                 All Departments
               </button>
-              {categories.map((c) => (
+              {(Array.isArray(categories) ? categories : FALLBACK_CATEGORIES).map((c) => (
                 <button
                   key={c.id}
                   onClick={() => updateFilter('category', c.slug)}
@@ -276,7 +280,7 @@ export default function ProductList() {
           ) : (
             <>
               <div className="grid-products">
-                {products.map((product) => (
+                {(Array.isArray(products) ? products : FALLBACK_PRODUCTS).map((product) => (
                   <ProductCard key={product.id} product={product} />
                 ))}
               </div>
