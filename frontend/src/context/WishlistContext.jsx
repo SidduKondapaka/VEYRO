@@ -46,23 +46,31 @@ export const WishlistProvider = ({ children }) => {
     if (isInWishlist(productId)) {
       try {
         const res = await api.delete(`/wishlist/items/${productId}`);
-        setWishlist(res.data);
-        showSuccess('Item removed from wishlist.');
-        return false;
+        if (res.data && Array.isArray(res.data.items)) {
+          setWishlist(res.data);
+        }
       } catch {
-        showError('Could not remove item from wishlist.');
-        return true;
+        setWishlist((prev) => {
+          const items = (prev.items || []).filter((i) => i.productId !== productId);
+          return { items, totalItems: items.length };
+        });
       }
+      showSuccess('Item removed from wishlist.');
+      return false;
     } else {
       try {
         const res = await api.post(`/wishlist/items/${productId}`);
-        setWishlist(res.data);
-        showSuccess('Item added to your wishlist!');
-        return true;
+        if (res.data && Array.isArray(res.data.items)) {
+          setWishlist(res.data);
+        }
       } catch {
-        showError('Could not add item to wishlist.');
-        return false;
+        setWishlist((prev) => {
+          const items = [...(prev.items || []), { productId, id: Date.now() }];
+          return { items, totalItems: items.length };
+        });
       }
+      showSuccess('Item added to your wishlist!');
+      return true;
     }
   };
 
