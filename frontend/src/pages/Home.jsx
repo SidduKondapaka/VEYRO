@@ -5,6 +5,8 @@ import ProductCard from '../components/ProductCard';
 import LoadingSpinner from '../components/LoadingSpinner';
 import api from '../api/axios';
 
+import { FALLBACK_CATEGORIES, FALLBACK_PRODUCTS } from '../api/fallbackData';
+
 export default function Home() {
   const [categories, setCategories] = useState([]);
   const [featuredProducts, setFeaturedProducts] = useState([]);
@@ -22,12 +24,16 @@ export default function Home() {
           api.get('/products/new-arrivals'),
         ]);
 
-        setCategories(catRes.data);
-        setFeaturedProducts(featRes.data);
-        setBestSellers(bestRes.data);
-        setNewArrivals(newRes.data);
+        setCategories(catRes.data?.length ? catRes.data : FALLBACK_CATEGORIES);
+        setFeaturedProducts(featRes.data?.length ? featRes.data : FALLBACK_PRODUCTS);
+        setBestSellers(bestRes.data?.length ? bestRes.data : FALLBACK_PRODUCTS.slice(0, 4));
+        setNewArrivals(newRes.data?.length ? newRes.data : FALLBACK_PRODUCTS.slice(2, 6));
       } catch (err) {
-        console.error('Failed to load homepage data', err);
+        console.warn('Backend API currently unreachable, using catalog preview:', err);
+        setCategories(FALLBACK_CATEGORIES);
+        setFeaturedProducts(FALLBACK_PRODUCTS);
+        setBestSellers(FALLBACK_PRODUCTS.slice(0, 4));
+        setNewArrivals(FALLBACK_PRODUCTS.slice(2, 6));
       } finally {
         setLoading(false);
       }

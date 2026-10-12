@@ -8,6 +8,7 @@ import { useAuth } from '../context/AuthContext';
 import { useCart } from '../context/CartContext';
 import { useWishlist } from '../context/WishlistContext';
 import api from '../api/axios';
+import { FALLBACK_CATEGORIES } from '../api/fallbackData';
 
 export default function Navbar() {
   const { user, isAuthenticated, isAdmin, logout } = useAuth();
@@ -26,9 +27,9 @@ export default function Navbar() {
     const fetchCategories = async () => {
       try {
         const res = await api.get('/categories');
-        setCategories(res.data);
+        setCategories(res.data?.length ? res.data : FALLBACK_CATEGORIES);
       } catch (err) {
-        console.error('Failed to load categories', err);
+        setCategories(FALLBACK_CATEGORIES);
       }
     };
     fetchCategories();

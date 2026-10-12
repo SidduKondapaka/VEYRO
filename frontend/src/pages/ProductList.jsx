@@ -5,6 +5,7 @@ import ProductCard from '../components/ProductCard';
 import LoadingSpinner from '../components/LoadingSpinner';
 import EmptyState from '../components/EmptyState';
 import api from '../api/axios';
+import { FALLBACK_CATEGORIES, FALLBACK_PRODUCTS } from '../api/fallbackData';
 
 export default function ProductList() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -32,9 +33,9 @@ export default function ProductList() {
     const fetchCategories = async () => {
       try {
         const res = await api.get('/categories');
-        setCategories(res.data);
+        setCategories(res.data?.length ? res.data : FALLBACK_CATEGORIES);
       } catch (err) {
-        console.error('Failed to load categories', err);
+        setCategories(FALLBACK_CATEGORIES);
       }
     };
     fetchCategories();
@@ -64,7 +65,13 @@ export default function ProductList() {
           totalElements: res.data.totalElements,
         });
       } catch (err) {
-        console.error('Failed to load products', err);
+        console.warn('Backend API currently unreachable, using catalog preview:', err);
+        setProducts(FALLBACK_PRODUCTS);
+        setPageData({
+          page: 0,
+          totalPages: 1,
+          totalElements: FALLBACK_PRODUCTS.length,
+        });
       } finally {
         setLoading(false);
       }
