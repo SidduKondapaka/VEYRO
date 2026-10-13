@@ -86,6 +86,8 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.GET, "/api/products/*/reviews").permitAll()
                 // API Docs & Swagger
                 .requestMatchers("/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
+                // Actuator health check (Railway/Render)
+                .requestMatchers("/actuator/health", "/actuator/info").permitAll()
                 // Admin protected endpoints
                 .requestMatchers("/api/admin/**").hasAuthority("ROLE_ADMIN")
                 // All other API requests must be authenticated

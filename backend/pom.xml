@@ -76,6 +76,12 @@
             <version>${springdoc.version}</version>
         </dependency>
 
+        <!-- Actuator (Health checks for Railway/Render) -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
+        </dependency>
+
         <!-- Testing Dependencies -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
